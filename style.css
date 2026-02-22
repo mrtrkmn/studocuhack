@@ -4,9 +4,15 @@ body .nofilter {
 }
 
 /* Force remove blur from blurred page wrappers (CSS modules with dynamic hashes) */
-.page-content[class*="blurred"] {
+.page-content[class*="blurred"],
+.pf[class*="blurred"] {
     filter: none !important;
     user-select: auto !important;
+}
+
+/* Force remove blur from all page wrapper elements */
+.pf.nofilter {
+    filter: unset !important;
 }
 
 /* Download button styles */

@@ -34,14 +34,20 @@
     }
 
     function removeBlur() {
+        // Remove blur from page wrapper elements (.pf) which may carry the filter
+        document.querySelectorAll('.pf').forEach(pf => {
+            pf.style.filter = 'none';
+            pf.style.userSelect = 'auto';
+            pf.classList.add('nofilter');
+            Array.from(pf.classList).forEach(cls => {
+                if (cls.includes('blurred')) pf.classList.remove(cls);
+            });
+        });
+
         document.querySelectorAll('.page-content').forEach(page => {
-            // Remove inline blur styles
-            if (page.style.filter && page.style.filter.includes('blur')) {
-                page.style.filter = 'none';
-            }
-            if (page.style.userSelect === 'none') {
-                page.style.userSelect = 'auto';
-            }
+            // Remove inline filter unconditionally
+            page.style.filter = 'none';
+            page.style.userSelect = 'auto';
 
             // Add nofilter class for CSS override
             page.classList.add('nofilter');
@@ -52,6 +58,20 @@
                     page.classList.remove(cls);
                 }
             });
+
+            // Also remove blur from ancestor elements up to #page-container
+            let ancestor = page.parentElement;
+            let depth = 0;
+            while (ancestor && ancestor.id !== 'page-container' && ancestor !== document.body && depth < 10) {
+                if (ancestor.style.filter) {
+                    ancestor.style.filter = 'none';
+                }
+                Array.from(ancestor.classList).forEach(cls => {
+                    if (cls.includes('blurred')) ancestor.classList.remove(cls);
+                });
+                ancestor = ancestor.parentElement;
+                depth++;
+            }
 
             // Make blurred images fill the page container properly
             page.querySelectorAll('img').forEach(img => {

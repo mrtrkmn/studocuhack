@@ -1,5 +1,13 @@
 function generatePDF() {
     // Force all pages visible and unblurred
+    document.querySelectorAll('.pf').forEach(pf => {
+        pf.style.filter = 'none';
+        pf.style.userSelect = 'auto';
+        pf.classList.add('nofilter');
+        Array.from(pf.classList).forEach(cls => {
+            if (cls.includes('blurred')) pf.classList.remove(cls);
+        });
+    });
     document.querySelectorAll('.page-content').forEach(page => {
         page.style.display = 'block';
         page.style.filter = 'none';
@@ -32,6 +40,14 @@ function generatePDF() {
     clone.querySelectorAll('.banner-wrapper, [class*="InlineBanner"], [class*="PremiumBanner"], [class*="PremiumPageClarification"]').forEach(function(el) { el.remove(); });
 
     // Force all pages visible in clone
+    clone.querySelectorAll('.pf').forEach(function(pf) {
+        pf.style.filter = 'none';
+        pf.style.userSelect = 'auto';
+        pf.classList.add('nofilter');
+        Array.from(pf.classList).forEach(function(cls) {
+            if (cls.includes('blurred')) pf.classList.remove(cls);
+        });
+    });
     clone.querySelectorAll('.page-content').forEach(function(page) {
         page.style.display = 'block';
         page.style.filter = 'none';
@@ -51,7 +67,7 @@ function generatePDF() {
 
     // Set up the popup document
     pdfWindow.document.querySelector('head').innerHTML = headContent +
-        '<style>.nofilter, .page-content { filter: none !important; display: block !important; user-select: auto !important; }' +
+        '<style>.nofilter, .page-content, .pf { filter: none !important; display: block !important; user-select: auto !important; }' +
         ' [class*="banner"], [class*="Banner"], [class*="Premium"], [class*="InlineBanner"], [class*="PremiumPageClarification"] { display: none !important; }' +
         ' @media print { ' + printSettings + ' }</style>';
     pdfWindow.document.title = docTitle;
